@@ -10,83 +10,74 @@ OPPERTUNITY FOR IMPROVEMENT
 1. Test scripts
 2. Data cleaning (pre-cleaned the docs using excel)
 
+HELP WITH CODING PROJECT
+https://towardsdatascience.com/moving-averages-in-python-16170e20f6c
+
+
+
 '''
 ############################
 from IPython.display import display
 import pandas as pd
 
 # get csv files from github
-df_city_data = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/city_data.csv", encoding='utf-8')
-df_city_list = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/city_list.csv", encoding='utf-8')
 df_global_data = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/global_data.csv", encoding='utf-8')
-df_japan = pd.read_csv("",encoding='utf-8')
+df_japan = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/tokyo_city_data.csv",encoding='utf-8')
 
 # Verify head and size
-'''
-# Check head and size
-print("\nData Import Complete - CITY Data")
-print(df_city_data.head())
-print(df_city_data.info())
-
-print("\nData Import Complete - City NAMES Data")
-print(df_city_list.head())
-print(df_city_list.info())
+print("\nData Import Complete - TOKYO Data")
+print(df_japan.head())
+print("---------------------")
+print(df_japan.info())
 
 print("\nData Import Complete - GLOBAL Data")
 print(df_global_data.head())
+print("---------------------")
 print(df_global_data.info())
-'''
 
-# Remove all NaN from data and only target TOKYO
+print("=========================================")
+print("===========minimum data clean============")
+print("=========================================")
+# Remove all NaN from data that will be analyzed also minimum data cleaning
+df_japan.dropna()
+df_japan.drop(['city'], axis=1, inplace=True)
+print(df_japan.head()) #checking that the city column removed from Japan data
 
-df_city_data_clean = df_city_data.dropna()
-df_city_data_clean.drop('country', axis=1, inplace=True)
-#df_city_data_clean.drop(df_city_data_clean.index[0:63891], axis=0, inplace=True)
-#df_city_data_clean.drop(df_city_data_clean.index[64061:70793], axis=0, inplace=True)
-print(pd.DataFrame(df_city_data_clean))
-
-print(df_city_data_clean.style)
-
-#print(df_city_data_clean.head())
-
-#print("\n", df_global_data.head())
-
-#print(df_city_data_clean.city.unique())
-
-# brute force... drop all but Tokyo
-#df_tokyo = df_city_data_clean.drop([Abidjan], axis=0, inplace=True)
+df_global_data.dropna()
 
 
+print("=========================================")
+print("===========average temps============")
+print("=========================================")
 
+# set year as index
+df_japan.set_index('year', inplace=True)
+df_japan.index.name = 'year'
+df_japan['japan_average_temperature'] = df_japan.mean(axis=1)
+df_japan = df_japan[['japan_average_temperature']]
+print(df_japan.head()) # check work
 
-#print(df_tokyo.head())
+df_global_data.set_index('year', inplace=True)
+df_global_data.index.name = 'year'
+df_global_data['global_average_temperature'] = df_global_data.mean(axis=1)
+df_global_data = df_global_data[['global_average_temperature']]
+print(df_global_data.head()) # check work
 
-#print() # get names of all rows, remove tokyo, then drop function (same with global data)
+print("=========================================")
+print("===========create plots============")
+print("=========================================")
 
-# df_tokyo_data_tokyo = df_city_data_clean.drop(')
-
-# df_tokyo_data.drop(columns=['city','country'])
-
-# Verify the length of removed fields
-'''
-print("\n\nData Import Complete - CITY Data - CLEANED")
-print("Before cleaning, ", len(data_city_data))
-print("After cleaning, ", len(data_city_data_clean))
-'''
-
-#print(data_city_data_clean.head())
-
+# plotting help --> https://swcarpentry.github.io/python-novice-gapminder/09-plotting/
 
 # create plots
-'''
-# import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 
 # matplotlib inline
-plt.style.use('seaborn')
-
-# line plot - the yearly average air temperature in Barcelona
-data_city_data_clean.plot(color='green', linewidth=3, figsize=(12,6))
+plt.style.use('bmh')
+'''
+# =========== PLOT JAPAN =========================
+# line plot - for japan
+df_japan.plot(color='green', linewidth=3, figsize=(12,6))
 
 # modify ticks size
 plt.xticks(fontsize=14)
@@ -94,22 +85,49 @@ plt.yticks(fontsize=14)
 plt.legend('')
 
 # title and labels
-plt.title('The average city temperature', fontsize=20)
+plt.title('The average TOKYO temperature', fontsize=20)
+plt.xlabel('Year', fontsize=16)
+plt.ylabel('Temperature [°C]', fontsize=16)
+
+plt.show()
+
+
+# =========== PLOT GLOBAL =========================
+# line plot - for GLOBAL
+df_global_data.plot(color='pink', linewidth=3, figsize=(12,6))
+
+# modify ticks size
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.legend('')
+
+# title and labels
+plt.title('The average GLOBAL temperature', fontsize=20)
 plt.xlabel('Year', fontsize=16)
 plt.ylabel('Temperature [°C]', fontsize=16)
 
 plt.show()
 '''
+print("=========================================")
+print("===========moving averaging plots============")
+print("=========================================")
 
+# cumulative moving average = CMA
+df_japan['CMA'] = df_japan.japan_average_temperature.expanding().mean()
+df_global_data['CMA'] = df_global_data.global_average_temperature.expanding().mean()
 
+# =========== COMBINE BOTH PLOTS =========================
 
+# subplot help: https://bertvandenbroucke.netlify.app/2019/07/10/the-many-ways-to-combine-plots-in-python/
 
-'''
-# calculate the yearly average temp
-data_city_data_clean['average_city_data'] = data_city_data_clean.mean(axis=0)
-print(data_city_data_clean.head())
-print(data_city_data_clean.info())
-'''
+year = list(range(1750, 2016))
+# japan_data =
+print(df_japan)
+print(year)
 
-# Next steps - TEST SCRIPTS
-# test if loaded the correct CSV
+fig, ax = plt.subplots(2, 1)
+
+ax[0].plot(df_japan)
+ax[1].plot(df_global_data)
+
+plt.show()
