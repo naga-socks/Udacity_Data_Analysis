@@ -46,7 +46,6 @@ print("===========minimum data clean============")
 print("=========================================")
 # Remove all NaN from data that will be analyzed also minimum data cleaning
 df_japan.dropna()
-df_japan.drop(['city'], axis=1, inplace=True)
 print(df_japan.head()) #checking that the city column removed from Japan data
 
 df_global_data.dropna()
