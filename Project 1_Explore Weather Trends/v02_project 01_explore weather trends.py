@@ -10,10 +10,13 @@ OPPERTUNITY FOR IMPROVEMENT
 1. Test scripts
 2. Data cleaning (pre-cleaned the docs using excel)
 
-HELP WITH CODING PROJECT
-https://towardsdatascience.com/moving-averages-in-python-16170e20f6c
+HELP WITH CODING PROJECT IN PYTHON
+# project help in PYTHON: https://towardsdatascience.com/moving-averages-in-python-16170e20f6c
+# doing the data analysis in EXCEL would have been EASY -- it was more of a challenge programming in PYTHON!
 
-
+HELP WITH PLOTTING
+# plotting help --> https://swcarpentry.github.io/python-novice-gapminder/09-plotting/
+# subplot help: https://bertvandenbroucke.netlify.app/2019/07/10/the-many-ways-to-combine-plots-in-python/
 
 '''
 ############################
@@ -21,7 +24,7 @@ from IPython.display import display
 import pandas as pd
 
 # get csv files from github
-df_global_data = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/global_data.csv", encoding='utf-8')
+df_global_data = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/short_global_data.csv", encoding='utf-8')
 df_japan = pd.read_csv("https://raw.githubusercontent.com/naga-socks/Udacity_Data_Analysis/main/Project%201_Explore%20Weather%20Trends/tokyo_city_data.csv",encoding='utf-8')
 
 # Verify head and size
@@ -116,14 +119,43 @@ print("=========================================")
 df_japan['CMA'] = df_japan.japan_average_temperature.expanding().mean()
 df_global_data['CMA'] = df_global_data.global_average_temperature.expanding().mean()
 
+#JAPAN TEMP CMA
+# colors for the line plot
+colors = ['green', 'orange']
+
+# line plot - the yearly average japan temp
+df_japan[['japan_average_temperature', 'CMA']].plot(color=colors, linewidth=3, figsize=(12,6))
+
+# modify ticks size
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.legend(labels =['Average Temp', 'CMA'], fontsize=14)
+
+# title and labels
+plt.title('Yearly Average Temp of TOKYO, Japan', fontsize=20)
+plt.xlabel('Year', fontsize=16)
+plt.ylabel('Temperature [°C]', fontsize=16)
+
+# GLOBAL TEMP CMA
+# colors for the line plot
+colors = ['steelblue', 'deeppink']
+
+# line plot - the yearly accumulated global temp
+df_global_data[['global_average_temperature','CMA']].plot(color=colors, linewidth=3, figsize=(12,6))
+
+# modify ticks size
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.legend(labels =['Average Temp', 'CMA'], fontsize=14)
+
+# title and labels
+plt.title('Yearly Average Temp of Globe', fontsize=20)
+plt.xlabel('Year', fontsize=16)
+plt.ylabel('Rainfall [mm]', fontsize=16)
+
+
 # =========== COMBINE BOTH PLOTS =========================
-
 # subplot help: https://bertvandenbroucke.netlify.app/2019/07/10/the-many-ways-to-combine-plots-in-python/
-
-year = list(range(1750, 2016))
-# japan_data =
-print(df_japan)
-print(year)
 
 fig, ax = plt.subplots(2, 1)
 
