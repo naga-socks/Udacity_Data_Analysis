@@ -17,6 +17,7 @@ HELP WITH CODING PROJECT IN PYTHON
 HELP WITH PLOTTING
 # plotting help --> https://swcarpentry.github.io/python-novice-gapminder/09-plotting/
 # subplot help --> https://bertvandenbroucke.netlify.app/2019/07/10/the-many-ways-to-combine-plots-in-python/
+# HELP WITH PLOT AXIS CONTROL --> https://www.kite.com/python/docs/matplotlib.pyplot.xlim
 
 HELP WITH SQL
 # BETWEEN function --> https://www.w3schools.com/sql/sql_between.asp
@@ -79,76 +80,51 @@ import matplotlib.pyplot as plt
 
 # matplotlib inline
 plt.style.use('bmh')
-'''
-# =========== PLOT JAPAN =========================
-# line plot - for japan
-df_japan.plot(color='green', linewidth=3, figsize=(12,6))
 
-# modify ticks size
-plt.xticks(fontsize=14)
-plt.yticks(fontsize=14)
-plt.legend('')
-
-# title and labels
-plt.title('The average TOKYO temperature', fontsize=20)
-plt.xlabel('Year', fontsize=16)
-plt.ylabel('Temperature [°C]', fontsize=16)
-
-plt.show()
-
-
-# =========== PLOT GLOBAL =========================
-# line plot - for GLOBAL
-df_global_data.plot(color='pink', linewidth=3, figsize=(12,6))
-
-# modify ticks size
-plt.xticks(fontsize=14)
-plt.yticks(fontsize=14)
-plt.legend('')
-
-# title and labels
-plt.title('The average GLOBAL temperature', fontsize=20)
-plt.xlabel('Year', fontsize=16)
-plt.ylabel('Temperature [°C]', fontsize=16)
-
-plt.show()
-'''
 print("=========================================")
-print("===========moving averaging plots============")
+print("===========SIMPLE moving average plots============")
 print("=========================================")
 
-# cumulative moving average = CMA
-df_japan['CMA'] = df_japan.japan_average_temperature.expanding().mean()
-df_global_data['CMA'] = df_global_data.global_average_temperature.expanding().mean()
+# SIMPLE moving average = SMA of 10 years
+df_japan['SMA_10'] = df_japan.japan_average_temperature.rolling(10, min_periods=1).mean()
+df_global_data['SMA_10'] = df_global_data.global_average_temperature.rolling(10, min_periods=1).mean()
 
-#JAPAN TEMP CMA
+#JAPAN TEMP SMA
 # colors for the line plot
 colors = ['green', 'orange']
 
 # line plot - the yearly average japan temp
-df_japan[['japan_average_temperature', 'CMA']].plot(color=colors, linewidth=3, figsize=(12,6))
+df_japan[['japan_average_temperature', 'SMA_10']].plot(color=colors, linewidth=3, figsize=(12,6))
 
 # modify ticks size
 plt.xticks(fontsize=14)
 plt.yticks(fontsize=14)
-plt.legend(labels =['Average Temp', 'CMA'], fontsize=14)
+plt.legend(labels =['Average Temp', 'SMA_10'], fontsize=14)
+
+# range axis control
+# HELP WITH PLOT AXIS CONTROL --> https://www.kite.com/python/docs/matplotlib.pyplot.xlim
+plt.ylim(7.5, 16.5)
 
 # title and labels
 plt.title('Yearly Average Temp of TOKYO, Japan', fontsize=20)
 plt.xlabel('Year', fontsize=16)
 plt.ylabel('Temperature [°C]', fontsize=16)
 
-# GLOBAL TEMP CMA
+#-------------------------------
+# GLOBAL TEMP SMA
 # colors for the line plot
 colors = ['steelblue', 'deeppink']
 
 # line plot - the yearly accumulated global temp
-df_global_data[['global_average_temperature','CMA']].plot(color=colors, linewidth=3, figsize=(12,6))
+df_global_data[['global_average_temperature', 'SMA_10']].plot(color=colors, linewidth=3, figsize=(12,6))
 
 # modify ticks size
 plt.xticks(fontsize=14)
 plt.yticks(fontsize=14)
-plt.legend(labels =['Average Temp', 'CMA'], fontsize=14)
+plt.legend(labels =['Average Temp', 'SMA_10'], fontsize=14)
+
+# range axis control
+plt.ylim(7.5, 16.5)
 
 # title and labels
 plt.title('Yearly Average Temp of Globe', fontsize=20)
@@ -163,5 +139,7 @@ fig, ax = plt.subplots(2, 1)
 
 ax[0].plot(df_japan)
 ax[1].plot(df_global_data)
+# range axis control
+plt.ylim(7.5, 16.5)
 
 plt.show()
